@@ -33,6 +33,8 @@ const amountInput = document.getElementById('transactionAmount');
 const descriptionInput = document.getElementById('transactionDescription');
 const dateInput = document.getElementById('transactionDate');
 
+const searchInput = document.getElementById('searchInput');
+
 // initialize date today
 const today = new Date().toISOString().split('T')[0];
 amountInput.value = 0.00;
@@ -272,6 +274,52 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     resetViewBtn.addEventListener('click', () => {
         chart.resetZoom();
+    });
+
+    searchInput.addEventListener('input', () => {
+        const filter = searchInput.value.toLowerCase();
+
+        // if prefix with '#', search by ID only
+        if (filter.startsWith('#')) {
+            const idFilter = filter.slice(1);
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const id = row.cells[0].textContent.toLowerCase();
+                if (id.includes(idFilter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // if prefix with '₱', search by Amount only
+        else if (filter.startsWith('₱')) {
+            const amountFilter = filter.slice(1);
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const amount = row.cells[1].textContent.toLowerCase();
+                if (amount.includes(amountFilter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // search by all fields: ID, Amount, Description, Date
+        else {
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const id = row.cells[0].textContent.toLowerCase();
+                const amount = row.cells[1].textContent.toLowerCase();
+                const description = row.cells[2].textContent.toLowerCase();
+                const date = row.cells[3].textContent.toLowerCase();
+
+                if (id.includes(filter) || amount.includes(filter) || description.includes(filter) || date.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
     });
 
     addTransactionBtn.addEventListener('click', async (e) => {
