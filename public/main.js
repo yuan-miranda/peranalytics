@@ -276,6 +276,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         chart.resetZoom();
     });
 
+    document.addEventListener('keydown', (e) => {
+        // ctrl + k to focus search input
+        if (e.ctrlKey && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (document.activeElement === searchInput) searchInput.blur();
+            else searchInput.focus();
+        } else if (e.key === 'Escape') {
+            searchInput.value = '';
+            searchInput.blur();
+            tableBody.querySelectorAll('tr').forEach(row => {
+                row.style.display = '';
+            });
+        }
+    });
+
     searchInput.addEventListener('input', () => {
         const filter = searchInput.value.toLowerCase();
 
@@ -284,11 +299,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const idFilter = filter.slice(1);
             tableBody.querySelectorAll('tr').forEach(row => {
                 const id = row.cells[0].textContent.toLowerCase();
-                if (id.includes(idFilter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                if (id.includes(idFilter)) row.style.display = '';
+                else row.style.display = 'none';
             });
         }
 
@@ -297,11 +309,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const amountFilter = filter.slice(1);
             tableBody.querySelectorAll('tr').forEach(row => {
                 const amount = row.cells[1].textContent.toLowerCase();
-                if (amount.includes(amountFilter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                if (amount.includes(amountFilter)) row.style.display = '';
+                else row.style.display = 'none';
             });
         }
 
