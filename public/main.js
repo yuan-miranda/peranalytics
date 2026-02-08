@@ -151,6 +151,11 @@ function addTransactionChartData(date, amount) {
     chart.update();
 }
 
+function reformatDate(dateStr) {
+    const date = new Date(dateStr);
+    return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+}
+
 async function loadTransactions() {
     try {
         const response = await fetch('/api/load');
@@ -163,13 +168,13 @@ async function loadTransactions() {
         const totalTransactions = data.transactions.length;
         data.transactions.forEach((transaction, index) => {
             const reverseIndex = totalTransactions - index;
-            addTransactionTableRow(reverseIndex, transaction.id, transaction.amount, transaction.description, transaction.date);
+            addTransactionTableRow(reverseIndex, transaction.id, transaction.amount, transaction.description, reformatDate(transaction.date));
         });
 
         // group transactions and ascending order in chart
         const grouped = groupTransactions(data.transactions, groupBySelect.value);
         grouped.forEach((transaction) => {
-            addTransactionChartData(transaction.date, transaction.amount);
+            addTransactionChartData(reformatDate(transaction.date), transaction.amount);
         });
     } catch (error) {
         console.error('Error loading transactions:', error);

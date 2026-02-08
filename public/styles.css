@@ -13,3 +13,21 @@
     padding: 1rem;
 
 }
+
+.link-actions {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    z-index: 1;
+    margin: 1rem;
+}
+
+.link-actions img {
+    display: block;
+}
+
+@media (max-width: 50rem) {
+    .link-actions img {
+        filter: invert(1);
+    }
+}
